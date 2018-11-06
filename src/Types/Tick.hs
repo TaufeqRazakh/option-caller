@@ -10,6 +10,7 @@
 --     , age  :: Int
 --     } deriving (Generic, Show)
 
+{-# LANGUAGE DeriveGeneric #-}
 
 module Types.Tick where 
 
