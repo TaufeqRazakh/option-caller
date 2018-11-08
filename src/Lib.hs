@@ -1,16 +1,16 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DeriveGeneric #-}
 
 module Lib
     ( someFunc
     ) where
 
-import Network.Http.Simple
+import GHC.Generics
+import Network.HTTP.Simple
 import Data.Time.LocalTime
 import Data.Time.Clock
-import Data.Map.Lazy 
-
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+import Data.Aeson
+import Data.Map.Lazy (Map, empty)
 
 jsonURL :: String
 jsonURL = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=5min&apikey="
@@ -23,7 +23,6 @@ data AlphaMetaData = AlphaMetaData { information :: String
                                    } deriving (Generic, Show)
 
 instance ToJSON AlphaMetaData 
-
 instance FromJSON AlphaMetaData where
     parseJSON = withObject "AlphaMetaData" $ \amd -> AlphaMetaData
         <$> amd .: "1. Information"
@@ -40,7 +39,6 @@ data Tick = Tick { open :: Double
                  } deriving (Generic, Show)
 
 instance ToJSON Tick
-
 instance FromJSON Tick where
      parseJSON = withObject "Tick" $ \tick -> Tick
         <$> tick .: "1. open"
@@ -52,3 +50,12 @@ instance FromJSON Tick where
 data TimeSeriesResponse = TimeSeriesResponse { metaData :: AlphaMetaData
                                              , ticks :: Map UTCTime Tick
                                              } deriving (Generic, Show)
+
+instance ToJSON TimeSeriesResponse 
+instance FromJSON TimeSeriesResponse where
+     parseJSON = withObject "TimeSeriesResponse" $ \tsr -> TimeSeriesResponse
+        <$> tsr .: "Meta Data"
+        <.> tsr .: "Time Series (5min)"
+
+decodeTimeSeriesResponse :: IO (Maybe TimeSeriesResponse)
+decodeTimeSeriesResponse = undefined

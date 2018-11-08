@@ -2,7 +2,7 @@ name:                option-caller
 version:             0.1.0.0
 github:              "githubuser/option-caller"
 license:             BSD3
-author:              "Author name here"
+author:              "Taufeq Razakh"
 maintainer:          "example@example.com"
 copyright:           "2018 Author name here"
 
@@ -22,6 +22,8 @@ description:         Please see the README on GitHub at <https://github.com/gith
 dependencies:
 - base >= 4.7 && < 5
 - aeson
+- time
+- http-conduit
 
 library:
   source-dirs: src
