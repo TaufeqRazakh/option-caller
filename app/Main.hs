@@ -2,5 +2,5 @@ module Main where
 
 import Lib
 
-main :: IO ()
+main :: IO (Maybe TimeSeriesResponse)
 main = someFunc

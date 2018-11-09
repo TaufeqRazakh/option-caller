@@ -24,6 +24,8 @@ dependencies:
 - aeson
 - time
 - http-conduit
+- bytestring
+- containers
 
 library:
   source-dirs: src

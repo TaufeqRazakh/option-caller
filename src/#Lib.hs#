@@ -64,7 +64,7 @@ instance FromJSON TimeSeriesResponse where
 someFunc :: IO (Maybe TimeSeriesResponse)
 someFunc = do 
     response <- fmap decode $ simpleHttp $ jsonURL "MSFT" "5" "demo" 
-    print response
+    return response
 
 --obtainedTimeSeriesResponse :: IO (Maybe TimeSeriesResponse)
 --obtainedTimeSeriesResponse = do 
