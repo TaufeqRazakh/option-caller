@@ -11,9 +11,11 @@ import Data.Time.LocalTime
 import Data.Time.Clock
 import Data.Aeson
 import Data.Map.Lazy (Map, empty)
+import qualified Data.ByteString as B
 
-jsonURL :: String
-jsonURL = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=5min&apikey="
+jsonURL symbol interval key :: String -> String -> String -> String
+jsonURL = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" ++ symbol ++"&interval=" ++ interval ++ "min&apikey=" ++ key
+-- dont forgert to add show q for the time when passing a number and not demo key
 
 data AlphaMetaData = AlphaMetaData { information :: String
                                    , symbol :: String
@@ -55,7 +57,14 @@ instance ToJSON TimeSeriesResponse
 instance FromJSON TimeSeriesResponse where
      parseJSON = withObject "TimeSeriesResponse" $ \tsr -> TimeSeriesResponse
         <$> tsr .: "Meta Data"
-        <.> tsr .: "Time Series (5min)"
+        <.> tsr .: "Time Series (5min)" 
 
 decodeTimeSeriesResponse :: IO (Maybe TimeSeriesResponse)
-decodeTimeSeriesResponse = undefined
+decodeTimeSeriesResponse = do 
+    response <- fmap decode $ simpleHttp $ jsonURL "MSFT" "5" "demo" 
+    return response
+
+obtainedTimeSeriesResponse :: IO (Maybe TimeSeriesResponse)
+obtainedTimeSeriesResponse = do 
+    preResponse <- B.readFile "sample/justTicks.json"
+    response <- fmap decode preResponse  
