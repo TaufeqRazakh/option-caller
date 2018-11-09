@@ -1,1 +1,0 @@
-taufeq_star@Taufeqs-iMac.local.692
