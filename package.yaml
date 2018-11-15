@@ -24,7 +24,7 @@ dependencies:
 - aeson
 - time
 - http-conduit
-- bytestring
+- text
 - containers
 
 library:

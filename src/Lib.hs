@@ -5,20 +5,18 @@ module Lib
     ( someFunc
     ) where
 
-import GHC.Generics
 import Network.HTTP.Conduit (simpleHttp)
-import Data.Time.LocalTime
-import Data.Time.Clock
 import Data.Aeson
-import Data.Map.Lazy (Map, empty)
-import qualified Data.ByteString.Lazy.Char8 as C
+import qualified Data.Text.Lazy.IO as T
+import qualified Data.Text.Lazy.Encoding as T 
+import Data.Maybe
 
 jsonURL :: String -> String -> String -> String
 jsonURL symbol interval key = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" ++
           symbol ++ "&interval=" ++ interval ++ "min&apikey=" ++ key
 -- dont forgert to add show q for the time when passing a number and not demo key 
 
-someFunc :: IO ()
+someFunc :: IO (Value)
 someFunc = do
- val <- C.readFile $ "./sample/textReacher.txt"
- C.putStr val
+ val <-  T.readFile "./sample/full.json"
+ return . fromJust . decode . T.encodeUtf8 $ val
