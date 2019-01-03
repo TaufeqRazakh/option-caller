@@ -30,23 +30,13 @@ retStr (String x) = T.unpack x
 retSym :: Value -> String
 retSym (Object x) = retStr $ fromJust (HM.lookup (T.pack "2. Symbol") x)
 
--- retArr :: (HM.HashMap T.Text Value) -> String
--- retArr x = retSym $ fromJust $ HM.lookup key x
---     where key = T.pack "Meta Data"
-
 retMet :: Value -> String 
 retMet (Object x) = retSym $ fromJust (HM.lookup (T.pack "Meta Data") x)
--- retMet :: Value -> Value
--- retMet (Object x) = retArr x
 
--- retSymBetter :: Value -> String
--- retSymBetter (Object x) = do 
---   let 
 someFunc :: IO (String)
 someFunc = do
   samp <-  B.readFile "./sample/full.json"
   return (retMet $ fromJust $ decode $ samp)
-  -- return $ fromJust $ decode $ samp
 
 decodeFunc :: IO (Value)
 decodeFunc = do 
