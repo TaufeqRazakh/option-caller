@@ -30,7 +30,6 @@ dependencies:
 - vector
 - unordered-containers
 - directory
-- optparse-applicative
 
 library:
   source-dirs: src
