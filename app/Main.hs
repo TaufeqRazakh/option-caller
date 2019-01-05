@@ -3,7 +3,9 @@ module Main where
 import Lib
 import Store
 import Input
--- import qualified Data.ByteString.Char8 as C
 
 main :: IO ()
-main = putStr "Hi"
+main = do
+    putStrLn "Welcome to the option-caller app"
+    interactPage
+    putStr $ "You have choosen to exit the app\n"

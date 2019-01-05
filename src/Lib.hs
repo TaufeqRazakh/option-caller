@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Lib
     ( someFunc
     , decodeFunc
@@ -28,10 +30,10 @@ retStr :: Value -> String
 retStr (String x) = T.unpack x
 
 retSym :: Value -> String
-retSym (Object x) = retStr $ fromJust (HM.lookup (T.pack "2. Symbol") x)
+retSym (Object x) = retStr $ fromJust (HM.lookup ("2. Symbol") x)
 
 retMet :: Value -> String 
-retMet (Object x) = retSym $ fromJust (HM.lookup (T.pack "Meta Data") x)
+retMet (Object x) = retSym $ fromJust (HM.lookup ("Meta Data") x)
 
 someFunc :: IO (String)
 someFunc = do
