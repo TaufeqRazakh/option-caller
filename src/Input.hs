@@ -42,7 +42,6 @@ interactPage :: IO ()
 interactPage = do
     options2
     inputRoutine 
-
     
 takeOwnedSymbol :: IO [Text]
 takeOwnedSymbol = do
