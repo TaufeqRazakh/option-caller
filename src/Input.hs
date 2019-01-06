@@ -2,20 +2,20 @@
 
 module Input where -- exporting only interactPage 
 
-import System.IO
 import Data.Text.IO as T
 import Data.Text as T
-import Data.Ord
 import Control.Monad
 import Data.List
+import System.IO
+import Data.Ord
 
-options2 :: IO ()
-options2 = do
-    let lOptions = ["q -- quit this program"
+options :: IO ()
+options = do
+    let lOptions = [ "q -- quit this program"
                    , "h -- list of possible moves and inputs"
                    , "v -- view current portfolio"
                    , "a -- purchase stock volumes"
-                   , "o -- purchase options"
+                   , "p -- purchase options"
                    , "c -- check status if option can be exercised"
                    , "r -- check status if stock volumes are to be sold"
                    , "s -- manually sell a stock you own"
@@ -32,15 +32,45 @@ options2 = do
                 
 inputRoutine :: IO ()
 inputRoutine = do
-    T.putStr $ "give me a symbol: " 
+    T.putStr $ "type in choice : " 
     line <- T.getLine 
     unless (line == "q") $ do
-        T.putStrLn $ "okay i'll fetch stocks for " `T.append` line
+        case line of 
+          "h" -> options
+          "v" -> showPortfolio
+          "a" -> purchaseStock
+          "p" -> purchaseOptions
+          "c" -> checkStatusOption
+          "r" -> checkStatusStock
+          "s" -> sellStock
+          "e" -> exerciseOption
+        -- T.putStrLn $ "okay i'll fetch stocks for " `T.append` line
         inputRoutine
+
+showPortfolio :: IO ()
+showPortfolio = undefined
+
+purchaseStock :: IO ()
+purchaseStock = undefined 
+
+purchaseOptions :: IO ()
+purchaseOptions = undefined 
+
+checkStatusOption :: IO ()
+checkStatusOption = undefined
+
+checkStatusStock :: IO ()
+checkStatusStock = undefined
+
+sellStock :: IO ()
+sellStock = undefined
+
+exerciseOption :: IO ()
+exerciseOption = undefined
 
 interactPage :: IO ()
 interactPage = do
-    options2
+    options
     inputRoutine 
     
 takeOwnedSymbol :: IO [Text]
