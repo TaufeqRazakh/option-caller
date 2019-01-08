@@ -9,8 +9,10 @@ import Data.List
 import System.IO
 import Data.Ord
 
-options :: IO ()
-options = do
+import Data.Time.LocalTime
+
+optionsMenu :: IO ()
+optionsMenu = do
     let lOptions = [ "q -- quit this program"
                    , "h -- list of possible moves and inputs"
                    , "v -- view current portfolio"
@@ -36,7 +38,7 @@ inputRoutine = do
     line <- T.getLine 
     unless (line == "q") $ do
         case line of 
-          "h" -> options
+          "h" -> optionsMenu
           "v" -> showPortfolio
           "a" -> purchaseStock
           "p" -> purchaseOptions
@@ -44,11 +46,24 @@ inputRoutine = do
           "r" -> checkStatusStock
           "s" -> sellStock
           "e" -> exerciseOption
-        -- T.putStrLn $ "okay i'll fetch stocks for " `T.append` line
-        inputRoutine
+          otherwise -> T.putStrLn "***invalid option***"
 
+        inputRoutine
+      
+data Option = Option { symbol :: T.Text
+                     , expiry :: LocalTime
+                     , strike :: Double
+                     , price  :: Double
+                     } deriving(Show, Eq)
+
+data Stock = Stock T.Text {-implement this Stock data format-}
+
+data Portfolio = Portfolio { options :: [Option]
+                           , stocks  :: [Stock]
+                           }
+                 
 showPortfolio :: IO ()
-showPortfolio = undefined
+showPortfolio = T.putStr "Empty Portfolio\n"
 
 purchaseStock :: IO ()
 purchaseStock = undefined 
@@ -70,7 +85,7 @@ exerciseOption = undefined
 
 interactPage :: IO ()
 interactPage = do
-    options
+    optionsMenu
     inputRoutine 
     
 takeOwnedSymbol :: IO [Text]
