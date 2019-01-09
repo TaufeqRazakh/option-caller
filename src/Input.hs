@@ -8,6 +8,9 @@ import Control.Monad
 import Data.List
 import System.IO
 import Data.Ord
+import Types.Stock
+import Types.Option 
+import Types.Portfolio
 
 import Data.Time.LocalTime
 
@@ -49,21 +52,11 @@ inputRoutine = do
           otherwise -> T.putStrLn "***invalid option***"
 
         inputRoutine
-      
-data Option = Option { symbol :: T.Text
-                     , expiry :: LocalTime
-                     , strike :: Double
-                     , price  :: Double
-                     } deriving(Show, Eq)
 
-data Stock = Stock T.Text {-implement this Stock data format-}
+retBasePortFolio = Portfolio { options = (Just Option {symbol = "MSFT", expiry = LocalTime { localDay = (read $ "2018-11-07"), localTimeOfDay = read $ "16:00:00"}, strike = 100, price = 10}), stocks = (Just [NoStock, NoStock] ) }
 
-data Portfolio = Portfolio { options :: [Option]
-                           , stocks  :: [Stock]
-                           }
-                 
 showPortfolio :: IO ()
-showPortfolio = T.putStr "Empty Portfolio\n"
+showPortfolio = System.IO.putStr $ show retBasePortFolio
 
 purchaseStock :: IO ()
 purchaseStock = undefined 
