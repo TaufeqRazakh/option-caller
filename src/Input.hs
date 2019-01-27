@@ -62,7 +62,18 @@ purchaseStock :: IO ()
 purchaseStock = undefined 
 
 purchaseOptions :: IO ()
-purchaseOptions = undefined 
+purchaseOptions = do
+  T.putStrLn "Type in the symbol, expiry date (yyyy-mm-dd), strike, and price of the option separated by space" 
+  userInput <- T.getLine
+  let inputSet = T.words userInput
+  let i3 = read $ T.unpack $ userInput :: Option
+  print i3
+
+-- TO REMOVE
+sampleOption :: Option
+sampleOption = Option "MSFT" LocalTime { localDay = (read $ "2018-11-07"), localTimeOfDay = (read $ "16:00:00")} 200 20
+
+-- UPTO
 
 checkStatusOption :: IO ()
 checkStatusOption = undefined
@@ -80,7 +91,8 @@ interactPage :: IO ()
 interactPage = do
     optionsMenu
     inputRoutine 
-    
+
+-- REMOVE BELOW 
 takeOwnedSymbol :: IO [Text]
 takeOwnedSymbol = do
   print $ "Type in a symbol for which you own stocks, the volume, the value purchased for \n (Use comma and space as separator)"
