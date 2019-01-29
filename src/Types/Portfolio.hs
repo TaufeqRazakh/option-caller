@@ -9,5 +9,5 @@ import Data.Text as T
 --                            } deriving(Show, Eq)
 
 data Portfolio = Portfolio { options :: Maybe Option 
-                           , stocks :: Maybe [Stock]
+                           , stocks :: Maybe Stock
                            } deriving(Show, Eq, Ord)

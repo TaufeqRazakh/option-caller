@@ -11,6 +11,7 @@ import Data.Ord
 import Types.Stock
 import Types.Option 
 import Types.Portfolio
+import Types.Parser
 
 import Data.Time.LocalTime
 
@@ -53,21 +54,26 @@ inputRoutine = do
 
         inputRoutine
 
-retBasePortFolio = Portfolio { options = (Just Option {symbol = "MSFT", expiry = LocalTime { localDay = (read $ "2018-11-07"), localTimeOfDay = read $ "16:00:00"}, strike = 100, price = 10}), stocks = (Just [NoStock, NoStock] ) }
+retBasePortFolio = Portfolio { options = (Just Option {Types.Option.symbol = "MSFT", Types.Option.expiry = LocalTime { localDay = (read $ "2018-11-07"), localTimeOfDay = read $ "16:00:00"}, Types.Option.strike = 100, Types.Option.price = 10}), stocks = (Just Stock {Types.Stock.symbol = "MSFT", Types.Stock.value = 100, Types.Stock.price = 10} ) }
 
 showPortfolio :: IO ()
 showPortfolio = System.IO.putStr $ show retBasePortFolio
 
 purchaseStock :: IO ()
-purchaseStock = undefined 
+purchaseStock = do
+  T.putStrLn "Type in the symbol, and price of the stock"
+  userInput <- T.getLine
+  case (toStock userInput) of
+    Right _ -> T.putStrLn "success!"
+    Left msg -> T.putStrLn msg
 
 purchaseOptions :: IO ()
 purchaseOptions = do
   T.putStrLn "Type in the symbol, expiry date (yyyy-mm-dd), strike, and price of the option separated by space" 
   userInput <- T.getLine
-  let inputSet = T.words userInput
-  let i3 = read $ T.unpack $ userInput :: Option
-  print i3
+  case (toOption userInput) of
+    Right _ -> T.putStrLn "success!"
+    Left (msg) -> T.putStrLn msg
 
 -- TO REMOVE
 sampleOption :: Option
