@@ -1,46 +1,92 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Lib
-    ( someFunc
-    , decodeFunc
-    ) where
+module Lib where
 
-import qualified Data.ByteString.Lazy as B
-import qualified Data.HashMap.Strict as HM
-import qualified Data.Text as T
-import Data.Vector hiding ((++), head)
-import Network.HTTP.Conduit (simpleHttp)
+import Data.Text.IO as T
+import Data.Text as T
+import Control.Monad
+import Data.List
+import System.IO
+import Data.Ord
+import Types.Stock
+import Types.Option 
+import Types.Portfolio
+import Types.Parser
+
 import Data.Time.LocalTime
-import Data.Maybe
-import Data.Aeson
 
-data MetaData = MetaData { information :: String
-                         , symbol :: String
-                         , lastRefreshed :: LocalTime
-                         , interval :: String
-                         , outputSize :: String
-                         , timeZone :: TimeZone
-                         } deriving (Show)
+optionsMenu :: IO ()
+optionsMenu = do
+    let lOptions = [ "q -- quit this program"
+                   , "h -- list of possible moves and inputs"
+                   , "v -- view current portfolio"
+                   , "a -- purchase stock volumes"
+                   , "p -- purchase options"
+                   , "c -- check status if option can be exercised"
+                   , "r -- check status if stock volumes are to be sold"
+                   , "s -- manually sell a stock you own"
+                   , "e -- manually exercise an option"
+                   ]  :: [Text]
+    let width = T.length (maximumBy (comparing T.length) lOptions) :: Int
+    displayWithEqualSpacing lOptions width
+    where 
+        displayWithEqualSpacing :: [T.Text] -> Int -> IO ()
+        displayWithEqualSpacing (opt1 : opt2 : rest) width = do 
+            T.putStrLn $ opt1 `T.append` (T.replicate (width-(T.length opt1)) " ") `append` "\t" `T.append` opt2
+            displayWithEqualSpacing rest width
+        displayWithEqualSpacing (opt : []) _ = T.putStrLn opt
+                
+inputRoutine :: IO ()
+inputRoutine = do
+    T.putStr $ "type in choice : " 
+    line <- T.getLine 
+    unless (line == "q") $ do
+        case line of 
+          "h" -> optionsMenu
+          "v" -> showPortfolio
+          "a" -> purchaseStock
+          "p" -> purchaseOptions
+          "c" -> checkStatusOption
+          "r" -> checkStatusStock
+          "s" -> sellStock
+          "e" -> exerciseOption
+          otherwise -> T.putStrLn "eeek...was that so hard to type?"
 
-jsonURL :: String -> String -> String -> String
-jsonURL symbol interval key = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="
-  ++symbol ++ "&interval=" ++ interval ++ "min&apikey=" ++ key
+        inputRoutine
 
-retStr :: Value -> String
-retStr (String x) = T.unpack x
+showPortfolio :: IO ()
+showPortfolio = undefined
 
-retSym :: Value -> String
-retSym (Object x) = retStr $ fromJust (HM.lookup ("2. Symbol") x)
+purchaseStock :: IO ()
+purchaseStock = do
+  T.putStrLn "Type in the symbol, and price of the stock"
+  userInput <- T.getLine
+  case (toStock userInput) of
+    Right acceptedOption -> T.putStrLn $ T.pack $ show acceptedOption
+    Left msg -> T.putStrLn msg
 
-retMet :: Value -> String 
-retMet (Object x) = retSym $ fromJust (HM.lookup ("Meta Data") x)
+purchaseOptions :: IO ()
+purchaseOptions = do
+  T.putStrLn "Type in the symbol, expiry date (yyyy-mm-dd), strike, and price of the option separated by space" 
+  userInput <- T.getLine
+  case (toOption userInput) of
+    Right _ -> T.putStrLn "Yeah Gucci Bro!"
+    Left (msg) -> T.putStrLn msg
 
-someFunc :: IO (String)
-someFunc = do
-  samp <-  B.readFile "./sample/full.json"
-  return (retMet $ fromJust $ decode $ samp)
+checkStatusOption :: IO ()
+checkStatusOption = undefined
 
-decodeFunc :: IO (Value)
-decodeFunc = do 
-  samp <-  B.readFile "./sample/full.json"
-  return $ fromJust $ decode $ samp
+checkStatusStock :: IO ()
+checkStatusStock = undefined
+
+sellStock :: IO ()
+sellStock = undefined
+
+exerciseOption :: IO ()
+exerciseOption = undefined
+
+interactPage :: IO ()
+interactPage = do
+    optionsMenu
+    inputRoutine
+    T.putStrLn "So long Folks!"
